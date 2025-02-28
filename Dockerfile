@@ -1,7 +1,3 @@
-Docker file :
- 
-# Use Node.js Alpine image to keep it lightweight
-
 FROM node:16-alpine
  
 # Set working directory in the container
