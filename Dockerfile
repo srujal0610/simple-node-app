@@ -21,6 +21,8 @@ RUN npm run test -- --coverage
 # Install required tools: curl, unzip, and openjdk (for SonarQube Scanner)
 RUN apk add --no-cache curl unzip openjdk17
 
+RUN java --version
+
 # Install SonarQube Scanner (without bundled JRE)
 RUN curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.0.1.4817-linux.zip && \
     unzip sonar-scanner.zip -d /opt/sonar-scanner && \
