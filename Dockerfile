@@ -6,8 +6,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json for dependencies installation
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies including the SonarQube Scanner
+RUN npm install && npm install sonarqube-scanner@3.4.0 --save-dev
 
 # Copy the rest of the project files
 COPY . .
@@ -18,23 +18,19 @@ RUN npm run build
 # Run tests and generate coverage report
 RUN npm run test -- --coverage
 
-# Install required tools: curl, unzip, and openjdk (for SonarQube Scanner)
-RUN apk add --no-cache curl unzip openjdk17
-
-RUN java --version
-
-# Install SonarQube Scanner (without bundled JRE)
-RUN curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.0.1.4817-linux.zip && \
-    unzip sonar-scanner.zip -d /opt/sonar-scanner && \
-    rm sonar-scanner.zip
-
-# Set PATH for sonar-scanner
-ENV PATH="/opt/sonar-scanner/sonar-scanner-7.0.1.4817-linux/bin:$PATH"
-
-# Ensure SonarQube Scanner uses the system Java
-ENV SONAR_SCANNER_OPTS="-Djava.home=/usr/lib/jvm/java-17-openjdk"
-
-# Default command to run SonarQube scanner
-CMD sonar-scanner -Dsonar.projectKey=simple-node-app \
-    -Dsonar.host.url=https://4a02-14-195-200-106.ngrok-free.app \
-    -Dsonar.login=${SONAR_TOKEN}
+# Default command to run SonarQube scanner using Node.js
+CMD node -e "
+  const scanner = require('sonarqube-scanner');
+  scanner(
+    {
+      serverUrl: 'https://4a02-14-195-200-106.ngrok-free.app',
+      token: process.env.SONAR_TOKEN,
+      options: {
+        'sonar.projectKey': 'simple-node-app',
+        'sonar.sources': '.',
+        'sonar.inclusions': '**',
+      }
+    },
+    () => process.exit()
+  );
+"
