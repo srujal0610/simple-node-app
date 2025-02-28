@@ -18,8 +18,8 @@ RUN npm run build
 # Run tests and generate coverage report
 RUN npm run test -- --coverage
 
-# Install curl and unzip using apk (for Alpine Linux)
-RUN apk add --no-cache curl unzip
+# Install required tools: curl, unzip, and openjdk (for SonarQube Scanner)
+RUN apk add --no-cache curl unzip openjdk17
 
 # Install SonarQube Scanner
 RUN curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.0.1.4817-linux-x64.zip && \
@@ -28,6 +28,9 @@ RUN curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/s
 
 # Set PATH for sonar-scanner
 ENV PATH="/opt/sonar-scanner/sonar-scanner-7.0.1.4817-linux-x64/bin:$PATH"
+
+# Tell SonarQube Scanner to use the system Java instead of the non-existent bundled JRE
+ENV SONAR_SCANNER_OPTS="-Djava.home=/usr/lib/jvm/java-17-openjdk"
 
 # Default command to run SonarQube scanner
 CMD sonar-scanner -Dsonar.projectKey=simple-node-app \
