@@ -1,0 +1,8 @@
+simple-node-app: sqp_49333f8a93853d74718cb60568a8c8da036d138b
+
+
+sonar-scanner \
+  -Dsonar.projectKey=simple-node-app \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=https://5059-103-1-101-199.ngrok-free.app \
+  -Dsonar.token=sqp_49333f8a93853d74718cb60568a8c8da036d138b

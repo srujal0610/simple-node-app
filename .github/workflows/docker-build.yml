@@ -1,0 +1,47 @@
+name: Build and SonarQube Scan with Docker
+ 
+on:
+
+  push:
+
+    branches:
+
+      - main
+ 
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+ 
+    steps:
+
+      # Checkout the code
+
+      - name: Checkout code
+
+        uses: actions/checkout@v3
+ 
+      # Set up Docker Buildx (useful if you decide to do multi-platform builds in the future)
+
+      - name: Set up Docker Buildx
+
+        uses: docker/setup-buildx-action@v2
+ 
+      # Build the Docker image
+
+      - name: Build Docker image
+
+        run: |
+
+          docker build -t simple-node-app .
+ 
+      # Run the Docker container
+
+      - name: Run Docker container
+
+        run: |
+
+          docker run --rm -e SONAR_TOKEN=${{ secrets.SONAR_TOKEN }} simple-node-app
+
+ 
