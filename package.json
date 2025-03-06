@@ -1,11 +1,19 @@
 {
-  "name": "simple-node-app",
+  "name": "github-actions-node-sonar",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "A simple Node.js project to demonstrate GitHub Actions with SonarQube",
+  "main": "src/index.js",
   "scripts": {
-    "build": "echo 'Building the project...'",
-    "test": "echo 'Running tests...'",
-    "test:coverage": "echo 'Generating coverage report...'"
+    "test": "jest --coverage"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^29.6.0"
+  },
+  "jest": {
+    "coverageDirectory": "coverage"
+  },
+  "author": "Your Name",
+  "license": "MIT"
 }
+
